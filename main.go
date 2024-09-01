@@ -49,11 +49,8 @@ func loadCSV() map[int]string {
 	csvReader := csv.NewReader(file)
 
 	records, err := csvReader.ReadAll()
-	var newSlice []string = records[1:][1:]
 
-	for r := range newSlice {
-
-	}
+	fmt.Printf("Test")
 	if err != nil {
 		panic(err)
 	}
@@ -88,7 +85,7 @@ func displayTodoList(todolist map[int](string)) {
 func createTodo(todolist map[int](string)) {
 
 	fmt.Printf("\n Enter your todo: ")
-	todo, err := fmt.Scanf()
+	todo, err := fmt.Scan()
 	if err != nil {
 		panic(err)
 	}
@@ -96,7 +93,7 @@ func createTodo(todolist map[int](string)) {
 	lastKey := len(todolist)
 	key := lastKey + 1
 
-	todolist[key] = todo
+	todolist[key] = string(todo)
 }
 
 func updateTodo(todolist map[int](string)) {
@@ -108,9 +105,5 @@ func markTodo(todolist map[int](string)) {
 }
 
 func writeToCsv() {
-
-}
-
-func getKey() int {
 
 }
