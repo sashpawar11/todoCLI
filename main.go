@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 var reader = bufio.NewReader(os.Stdin)
@@ -15,13 +17,18 @@ func main() {
 	todoList := loadCSVData()
 	var choice int32
 
+	color.Set(color.FgHiGreen)
 	fmt.Print("-\n-------------- To-do List -----------------\n\n")
 	displayTodoList(todoList)
+	color.Unset()
+
+	color.Set(color.FgHiCyan)
 	fmt.Print("-\n-------------- Menu -----------------\n\n")
 	fmt.Print("\n 1. Create a new Todo")
 	fmt.Print("\n 2. Update an existing Todo")
 	fmt.Print("\n 3. Mark a todo as complete")
 	fmt.Println()
+	color.Unset()
 
 	fmt.Print("\n Choose an option:")
 	fmt.Scan(&choice)
@@ -60,8 +67,8 @@ func loadCSVData() [][]string {
 
 func displayTodoList(todolist [][]string) {
 	for k, innerSlice := range todolist {
-		fmt.Printf("%d  ",
-			k)
+		fmt.Printf("[%d]  ",
+			k+1)
 		for _, data := range innerSlice {
 			fmt.Printf("%s  \n",
 				data)
