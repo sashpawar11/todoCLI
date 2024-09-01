@@ -1,15 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"encoding/csv"
 	"fmt"
 	"os"
-	"strconv"
+	"strings"
 )
+
+var reader = bufio.NewReader(os.Stdin)
 
 func main() {
 
-	todoList := loadCSV()
+	todoList := loadCSVData()
 	var choice int32
 
 	fmt.Print("-\n-------------- To-do List -----------------\n\n")
@@ -19,7 +22,6 @@ func main() {
 	fmt.Print("\n 2. Update an existing Todo")
 	fmt.Print("\n 3. Mark a todo as complete")
 	fmt.Println()
-	fmt.Print("\n 3. Mark a todo as complete")
 
 	fmt.Print("\n Choose an option:")
 	fmt.Scan(&choice)
@@ -37,9 +39,7 @@ func main() {
 	}
 }
 
-func loadCSV() map[int]string {
-
-	todolist := make(map[int]string)
+func loadCSVData() [][]string {
 
 	file, err := os.Open("data.csv")
 	if err != nil {
@@ -55,55 +55,65 @@ func loadCSV() map[int]string {
 		panic(err)
 	}
 
-	for _, records := range records {
-
-		if len(records) < 2 {
-			continue
-		}
-
-		key, err := strconv.Atoi(records[0])
-		if err != nil {
-			panic(err)
-		}
-
-		value := records[1]
-
-		todolist[key] = value
-	}
-
-	return todolist
+	return records
 }
 
-func displayTodoList(todolist map[int](string)) {
-	for k, v := range todolist {
-
-		fmt.Printf("%d     %s\n",
-			k, v)
+func displayTodoList(todolist [][]string) {
+	for k, innerSlice := range todolist {
+		fmt.Printf("%d  ",
+			k)
+		for _, data := range innerSlice {
+			fmt.Printf("%s  \n",
+				data)
+		}
 	}
 }
 
-func createTodo(todolist map[int](string)) {
+func createTodo(todolist [][]string) {
 
+	temp := make([]string, 0)
 	fmt.Printf("\n Enter your todo: ")
-	todo, err := fmt.Scan()
+	input, err := reader.ReadString('\n')
+
 	if err != nil {
 		panic(err)
 	}
 
-	lastKey := len(todolist)
-	key := lastKey + 1
+	temp = append(temp, strings.TrimSpace(input))
 
-	todolist[key] = string(todo)
-}
+	todolist = append(todolist, temp)
 
-func updateTodo(todolist map[int](string)) {
+	isWriteSucessfull := writeToCsv(todolist)
 
-}
-
-func markTodo(todolist map[int](string)) {
+	if isWriteSucessfull {
+		fmt.Print("Sucessfully saved data to csv!")
+	}
 
 }
 
-func writeToCsv() {
+func updateTodo(todolist [][]string) {
 
+}
+
+func markTodo(todolist [][]string) {
+
+}
+
+func writeToCsv(todolist [][]string) bool {
+
+	file, err := os.Create("data.csv")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	err = writer.WriteAll(todolist)
+	if err != nil {
+		panic(err)
+	}
+
+	return true
 }
