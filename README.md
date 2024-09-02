@@ -5,3 +5,9 @@ A cli todo-list app built using Golang
 
 ## Usage
     go run main.go
+
+
+
+## Storage
+
+The data is stored in a data.csv file, which is read/write for each CRUD operation.
